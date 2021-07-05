@@ -1,0 +1,27 @@
+{
+  "name": "@fast-app/fast-app",
+  "version": "0.0.1",
+  "description": "Quickly create a node.js web app",
+  "main": "dist/index.js",
+  "scripts": {
+    "tsc": "tsc",
+    "dev": "nodemon dist/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/coderadu/fast-app.git"
+  },
+  "author": "Radu",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/coderadu/fast-app/issues"
+  },
+  "homepage": "https://github.com/coderadu/fast-app#readme",
+  "devDependencies": {
+    "@types/node": "^16.0.0",
+    "nodemon": "^2.0.9"
+  },
+  "dependencies": {
+    "colors": "^1.4.0"
+  }
+}
