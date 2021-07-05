@@ -23,5 +23,8 @@
   },
   "dependencies": {
     "colors": "^1.4.0"
+  },
+  "bin": {
+    "app": "dist/index.js"
   }
 }
