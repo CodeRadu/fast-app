@@ -15,32 +15,46 @@ doNothing(colors); // Required for tsc to include colors in js
 interface app {
   index: number;
   name: string;
-  function: string;
   color: string;
+  function: string;
   arguments: Array<string>;
 }
 
 const APPS: Array<app> = [
   {
-    name: "React",
-    function: "npx",
-    color: "\x1b[34m",
     index: 0,
+    name: "React",
+    color: "\x1b[34m",
+    function: "npx",
     arguments: ["create-react-app", "."],
   },
   {
-    name: "Next.js",
-    function: "npx",
-    color: "\x1b[36m",
     index: 1,
+    name: "Next.js",
+    color: "\x1b[36m",
+    function: "npx",
     arguments: ["create-next-app", "."],
   },
   {
-    name: "Svelte",
-    function: "npx",
-    color: "\x1b[31m",
     index: 2,
+    name: "Svelte",
+    color: "\x1b[31m",
+    function: "npx",
     arguments: ["degit", "sveltejs/template", "."],
+  },
+  {
+    index: 3,
+    name: "Express JS",
+    color: "\x1b[33m",
+    function: "npx",
+    arguments: ["degit", "coderadu/fast-app-expressjs"],
+  },
+  {
+    index: 4,
+    name: "Express TS",
+    color: "\x1b[34m",
+    function: "npx",
+    arguments: ["degit", "coderadu/fast-app-expressts"],
   },
 ];
 
@@ -57,9 +71,15 @@ async function main() {
     console.error("Error: Input invalid");
     process.exit(1);
   }
+  console.log(`Creating ${found.name} app`);
+  console.time("Create");
   const cmd = spawn(found.function, found.arguments);
   cmd.stdout.pipe(process.stdout);
   cmd.on("exit", (code: number) => {
+    if (code != 0) {
+      console.log("Failed");
+    }
+    console.timeEnd("Create");
     process.exit(code);
   });
 }
