@@ -4,6 +4,7 @@ import colors from "colors";
 import snippets from "./consoleSnippets";
 import readline from "readline";
 import { spawn } from "child_process";
+import APPS, { App } from "./apps";
 
 const readlineInterface = readline.createInterface({
   input: process.stdin,
@@ -12,60 +13,9 @@ const readlineInterface = readline.createInterface({
 
 doNothing(colors); // Required for tsc to include colors in js
 
-interface app {
-  index: number;
-  name: string;
-  color: string;
-  function: string;
-  arguments: Array<string>;
-}
-
-const APPS: Array<app> = [
-  {
-    index: 0,
-    name: "React",
-    color: "\x1b[34m",
-    function: "npx",
-    arguments: ["create-react-app"],
-  },
-  {
-    index: 1,
-    name: "Next.js",
-    color: "\x1b[36m",
-    function: "npx",
-    arguments: ["create-next-app"],
-  },
-  {
-    index: 2,
-    name: "Svelte",
-    color: "\x1b[31m",
-    function: "npx",
-    arguments: ["degit", "sveltejs/template"],
-  },
-  {
-    index: 3,
-    name: "Express JS",
-    color: "\x1b[33m",
-    function: "npx",
-    arguments: ["degit", "coderadu/fast-app-expressjs"],
-  },
-  {
-    index: 4,
-    name: "Express TS",
-    color: "\x1b[34m",
-    function: "npx",
-    arguments: ["degit", "coderadu/fast-app-expressts"],
-  },
-];
-
 const args: Array<string> = process.argv;
 
-async function main(path: string = ".") {
-  console.log("<--Fast App-->".bold);
-  console.log(snippets.separator);
-  console.log(`Choose app type ${path != "." ? `to create in ${path}` : ""}`);
-  listApps(APPS);
-  const selected = await getInput(readlineInterface);
+function createApp(selected: unknown, path: string) {
   const found = APPS.find(
     (app) => app.index.toString() === (selected as string)
   );
@@ -85,9 +35,44 @@ async function main(path: string = ".") {
     process.exit(code);
   });
 }
-main(args[2]);
 
-function listApps(apps: Array<app>) {
+async function main(path: string = ".") {
+  console.log("<--Fast App-->".bold);
+  console.log(snippets.separator);
+  console.log(`Choose app type ${path != "." ? `to create in ${path}` : ""}`);
+  listApps(APPS);
+  const selected = await getInput(readlineInterface);
+  createApp(selected, path);
+}
+
+function autoRun(path: string, type: string) {
+  if (isNaN(+type)) {
+    console.error("App type is NaN");
+    console.log("Use help argument to list available options");
+    process.exit(1);
+  }
+  createApp(type as unknown, path);
+}
+
+function help() {
+  console.log(
+    "First argument is an optional path to the directory where the app should be created"
+  );
+  console.log(
+    "Second argument needs the first one, and is a number that specifies the app type to create"
+  );
+  console.log("Use list argument to list all available app types");
+  process.exit(0);
+}
+
+if (args[2] === "help") help();
+else if (args[2] === "list") {
+  listApps(APPS, false);
+  process.exit(0);
+} else if (args[3] != null) autoRun(args[2], args[3]);
+else main(args[2]);
+
+function listApps(apps: Array<App>, listNumbers: boolean = true) {
   let index = 0;
   const indexesArray: Array<number> = [];
 
@@ -97,7 +82,7 @@ function listApps(apps: Array<app>) {
     index++;
   });
   console.log("\x1b[37m");
-  console.log("[", ...indexesArray, "]");
+  if (listNumbers) console.log("[", ...indexesArray, "]");
 }
 
 function getInput(int: readline.Interface) {
