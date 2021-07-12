@@ -26,21 +26,21 @@ const APPS: Array<app> = [
     name: "React",
     color: "\x1b[34m",
     function: "npx",
-    arguments: ["create-react-app", "."],
+    arguments: ["create-react-app"],
   },
   {
     index: 1,
     name: "Next.js",
     color: "\x1b[36m",
     function: "npx",
-    arguments: ["create-next-app", "."],
+    arguments: ["create-next-app"],
   },
   {
     index: 2,
     name: "Svelte",
     color: "\x1b[31m",
     function: "npx",
-    arguments: ["degit", "sveltejs/template", "."],
+    arguments: ["degit", "sveltejs/template"],
   },
   {
     index: 3,
@@ -58,10 +58,12 @@ const APPS: Array<app> = [
   },
 ];
 
-async function main() {
+const args: Array<string> = process.argv;
+
+async function main(path: string = ".") {
   console.log("<--Fast App-->".bold);
   console.log(snippets.separator);
-  console.log("Choose app type");
+  console.log(`Choose app type ${path != "." ? `to create in ${path}` : ""}`);
   listApps(APPS);
   const selected = await getInput(readlineInterface);
   const found = APPS.find(
@@ -71,9 +73,9 @@ async function main() {
     console.error("Error: Input invalid");
     process.exit(1);
   }
-  console.log(`Creating ${found.name} app`);
+  console.log(`Creating ${found.name} app in ${path}`);
   console.time("Create");
-  const cmd = spawn(found.function, found.arguments);
+  const cmd = spawn(found.function, [...found.arguments, path]);
   cmd.stdout.pipe(process.stdout);
   cmd.on("exit", (code: number) => {
     if (code != 0) {
@@ -83,7 +85,7 @@ async function main() {
     process.exit(code);
   });
 }
-main();
+main(args[2]);
 
 function listApps(apps: Array<app>) {
   let index = 0;
