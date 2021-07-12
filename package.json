@@ -1,6 +1,6 @@
 {
   "name": "@fast-app/app",
-  "version": "0.0.4",
+  "version": "0.1.0",
   "description": "Quickly create a node.js web app",
   "main": "dist/index.js",
   "scripts": {
