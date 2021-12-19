@@ -4,6 +4,7 @@ export interface App {
   color: color;
   function: string;
   arguments: Array<string>;
+  package: string
 }
 
 export type color =
@@ -24,6 +25,7 @@ const APPS: Array<App> = [
     color: "\x1b[34m",
     function: "npx",
     arguments: ["create-react-app"],
+    package: "create-react-app"
   },
   {
     index: 1,
@@ -31,6 +33,7 @@ const APPS: Array<App> = [
     color: "\x1b[36m",
     function: "npx",
     arguments: ["create-next-app"],
+    package: "create-next-app"
   },
   {
     index: 2,
@@ -38,6 +41,7 @@ const APPS: Array<App> = [
     color: "\x1b[31m",
     function: "npx",
     arguments: ["degit", "sveltejs/template"],
+    package: "degit"
   },
   {
     index: 3,
@@ -45,6 +49,7 @@ const APPS: Array<App> = [
     color: "\x1b[33m",
     function: "npx",
     arguments: ["degit", "coderadu/fast-app-expressjs"],
+    package: "degit"
   },
   {
     index: 4,
@@ -52,6 +57,7 @@ const APPS: Array<App> = [
     color: "\x1b[34m",
     function: "npx",
     arguments: ["degit", "coderadu/fast-app-expressts"],
+    package: "degit"
   },
 ];
 

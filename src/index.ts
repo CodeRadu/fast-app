@@ -25,15 +25,24 @@ function createApp(selected: unknown, path: string) {
   }
   console.log(`Creating ${found.name} app in ${path}`);
   console.time("Create");
-  const cmd = spawn(found.function, [...found.arguments, path]);
-  cmd.stdout.pipe(process.stdout);
-  cmd.on("exit", (code: number) => {
-    if (code != 0) {
-      console.log("Failed");
+  const installCmd=`npm i -g ${found.package}`;
+  const install=spawn(installCmd, {shell:true});
+  install.on('exit', (code: number)=>{
+    if(code!=0){
+      console.error(`Error: ${found.package} install failed`);
+      process.exit(1);
     }
-    console.timeEnd("Create");
-    process.exit(code);
-  });
+    console.log(`${found.package}: installed`);
+    const cmd = spawn(found.function, [...found.arguments, path], {shell: true});
+    cmd.stdout.pipe(process.stdout);
+    cmd.on("exit", (code: number) => {
+      if (code != 0) {
+        console.log("Failed");
+      }
+      console.timeEnd("Create");
+      process.exit(code);
+    });
+  })
 }
 
 async function main(path: string = ".") {
@@ -94,4 +103,4 @@ function getInput(int: readline.Interface) {
   });
 }
 
-function doNothing(variable: any) {}
+function doNothing(...vars: any) {}

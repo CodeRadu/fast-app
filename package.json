@@ -4,8 +4,7 @@
   "description": "Quickly create a node.js web app",
   "main": "dist/index.js",
   "scripts": {
-    "tsc": "tsc",
-    "dev": "nodemon dist/index.js"
+    "dev": "tsc -w"
   },
   "repository": {
     "type": "git",
